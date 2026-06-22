@@ -19,7 +19,6 @@
 ## 使用前提
 
 - Windows 10/11
-- 远程服务器已安装 [cc-clip](https://github.com/ShunmeiCho/cc-clip)（默认模式），或有 SSH 访问权限（SCP 模式）
 - `~/.ssh/config` 中已配置远程主机
 
 ## 工作流程
