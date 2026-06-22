@@ -29,3 +29,7 @@
 3. 工具自动检测 → 上传到远程 `~/.cache/cc-clip/uploads` 目录
 4. 弹出 Toast 通知，远程路径已写入剪贴板
 5. 切换到 Claude Code / Codex CLI 窗口，路径自动粘贴
+
+## 致谢
+
+本项目基于 [cc-clip](https://github.com/ShunmeiCho/cc-clip)（by [@ShunmeiCho](https://github.com/ShunmeiCho)），为其 Windows 平台的扩展实现。感谢原作者的优秀工作。
