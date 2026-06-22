@@ -18,6 +18,11 @@
 
 从 [Releases](https://github.com/Kevin25858/cc-clip-monitor/releases) 下载 `cc-clip-monitor.exe`，放到任意目录即可使用。
 
+## 使用前提
+
+- Windows 10/11
+- `~/.ssh/config` 中已配置远程主机
+
 ## 工作流程
 
 1. 双击运行 `cc-clip-monitor.exe`，从 SSH 主机列表中选择目标服务器
