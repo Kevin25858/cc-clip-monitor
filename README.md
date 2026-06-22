@@ -1,42 +1,31 @@
 # cc-clip-monitor
 
-Windows 剪贴板监听工具，作为 [cc-clip](https://github.com/ShunmeiCho/cc-clip) 的 Windows 扩展——自动将截图上传到远程服务器，让你在 Claude Code / Codex CLI 中直接粘贴图片。
+[cc-clip](https://github.com/ShunmeiCho/cc-clip) 的 Windows 扩展——监听剪贴板截图，自动上传到远程服务器，让 Claude Code、Codex CLI、opencode 等工具直接使用图片。
 
 ## 功能
 
-- 剪贴板图片监听（MD5 去重）
-- 自动上传到远程服务器
-- 远程路径回写剪贴板
-- Windows Toast 通知
-- 窗口切换自动粘贴
-- 远程旧文件自动清理
-- 支持中文 SSH 主机名
-- 启动时交互选择 SSH 主机
-
-## 功能
-
-- 剪贴板图片监听（MD5 去重）
-- 自动上传到远程服务器
-- 远程路径回写剪贴板
-- Windows Toast 通知
-- 窗口切换自动粘贴
-- 远程旧文件自动清理
-- 支持中文 SSH 主机名
-- 启动时交互选择 SSH 主机
+- **剪贴板监听** — 自动检测截图，MD5 去重避免重复上传
+- **自动上传** — 通过 `cc-clip send` 或 SCP 上传到远程服务器
+- **路径回写** — 上传后将远程路径写入剪贴板
+- **自动粘贴** — 切换到终端窗口时自动 Ctrl+V 粘贴路径
+- **Toast 通知** — Windows 桌面通知提示上传结果
+- **远程清理** — 自动删除旧上传文件
+- **SSH 主机** — 从 `~/.ssh/config` 交互选择，支持中文主机名
 
 ## 下载
 
 从 [Releases](https://github.com/Kevin25858/cc-clip-monitor/releases) 下载 `cc-clip-monitor.exe`，放到任意目录即可使用。
 
-## 工作流程
-
-1. 启动后从 `~/.ssh/config` 选择主机
-2. 复制/截图图片
-3. 自动上传到远程服务器
-4. Toast 通知 + 远程路径写入剪贴板
-5. 点击终端窗口 → 自动粘贴路径
-
-## 依赖
+## 使用前提
 
 - Windows 10/11
-- [cc-clip](https://github.com/ShunmeiCho/cc-clip)（默认模式）或 `ssh` + `scp`
+- 远程服务器已安装 [cc-clip](https://github.com/ShunmeiCho/cc-clip)（默认模式），或有 SSH 访问权限（SCP 模式）
+- `~/.ssh/config` 中已配置远程主机
+
+## 工作流程
+
+1. 双击运行 `cc-clip-monitor.exe`，从 SSH 主机列表中选择目标服务器
+2. 在任意应用中截图或复制图片到剪贴板
+3. 工具自动检测 → 上传到远程 `~/.cache/cc-clip/uploads` 目录
+4. 弹出 Toast 通知，远程路径已写入剪贴板
+5. 切换到 Claude Code / Codex CLI 窗口，路径自动粘贴
