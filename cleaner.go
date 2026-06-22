@@ -2,6 +2,7 @@ package main
 
 import (
 	"os/exec"
+	"strings"
 )
 
 func CleanupRemote(host *SSHHost, remoteDir string) {
@@ -14,5 +15,9 @@ func CleanupRemote(host *SSHHost, remoteDir string) {
 		target = host.User + "@" + host.HostName
 	}
 	args = append(args, target, "rm -f "+remoteDir+"/* 2>/dev/null")
-	exec.Command("ssh", args...).CombinedOutput()
+	cmd := exec.Command("ssh", args...)
+	if host.Password != "" {
+		cmd.Stdin = strings.NewReader(host.Password + "\n")
+	}
+	cmd.CombinedOutput()
 }

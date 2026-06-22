@@ -10,9 +10,9 @@ import (
 )
 
 var (
-	kernel32Mod    = syscall.NewLazyDLL("kernel32.dll")
+	kernel32Mod       = syscall.NewLazyDLL("kernel32.dll")
 	setConsoleOutputCP = kernel32Mod.NewProc("SetConsoleOutputCP")
-	setConsoleCP       = kernel32Mod.NewProc("SetConsoleCP")
+	setConsoleCP      = kernel32Mod.NewProc("SetConsoleCP")
 )
 
 var version = "1.0.0"
@@ -53,12 +53,20 @@ func main() {
 	} else {
 		selected, err := SelectHost()
 		if err != nil {
-		fmt.Fprintf(os.Stderr, "错误: %v\n", err)
-		fmt.Println("\n按回车键退出...")
+			fmt.Fprintf(os.Stderr, "错误: %v\n", err)
+			fmt.Println("\n按回车键退出...")
 			bufio.NewReader(os.Stdin).ReadBytes('\n')
 			os.Exit(1)
 		}
 		host = selected
+	}
+
+	// Test SSH connection
+	if err := TestSSHConnection(host); err != nil {
+		fmt.Fprintf(os.Stderr, "\033[31m错误: %v\033[0m\n", err)
+		fmt.Println("\n按回车键退出...")
+		os.Stdin.Read(make([]byte, 1))
+		os.Exit(1)
 	}
 
 	remoteDir := "~/.cache/cc-clip/uploads"
@@ -79,7 +87,7 @@ func main() {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "错误: 剪贴板监听初始化失败: %v\n", err)
 		fmt.Println("\n按回车键退出...")
-		bufio.NewReader(os.Stdin).ReadBytes('\n')
+		os.Stdin.Read(make([]byte, 1))
 		os.Exit(1)
 	}
 
