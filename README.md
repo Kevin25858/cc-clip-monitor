@@ -13,31 +13,20 @@ Windows 剪贴板监听工具，作为 [cc-clip](https://github.com/ShunmeiCho/c
 - 支持中文 SSH 主机名
 - 启动时交互选择 SSH 主机
 
-## 安装
+## 功能
 
-```powershell
-# 添加到 PATH
-$env:PATH += ";D:\EXE\cc-clip-monitor"
-```
+- 剪贴板图片监听（MD5 去重）
+- 自动上传到远程服务器
+- 远程路径回写剪贴板
+- Windows Toast 通知
+- 窗口切换自动粘贴
+- 远程旧文件自动清理
+- 支持中文 SSH 主机名
+- 启动时交互选择 SSH 主机
 
-## 使用
+## 下载
 
-```powershell
-# 交互选择主机
-cc-clip-monitor
-
-# 指定主机
-cc-clip-monitor zaozhuang
-
-# 使用 SCP 直连（不依赖 cc-clip）
-cc-clip-monitor zaozhuang --scp
-
-# 禁用自动粘贴
-cc-clip-monitor zaozhuang --no-paste
-
-# 禁用远程清理
-cc-clip-monitor zaozhuang --no-cleanup
-```
+从 [Releases](https://github.com/Kevin25858/cc-clip-monitor/releases) 下载 `cc-clip-monitor.exe`，放到任意目录即可使用。
 
 ## 工作流程
 
@@ -50,10 +39,4 @@ cc-clip-monitor zaozhuang --no-cleanup
 ## 依赖
 
 - Windows 10/11
-- `cc-clip`（默认模式）或 `ssh` + `scp`（`--scp` 模式）
-
-## 构建
-
-```powershell
-go build -o cc-clip-monitor.exe .
-```
+- [cc-clip](https://github.com/ShunmeiCho/cc-clip)（默认模式）或 `ssh` + `scp`
