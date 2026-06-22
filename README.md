@@ -1,6 +1,6 @@
 # cc-clip-monitor
 
-Windows 剪贴板图片自动上传工具，作为 [cc-clip](https://github.com/ShunmeiCho/cc-clip) 的 Windows 扩展。
+Windows 剪贴板监听工具，作为 [cc-clip](https://github.com/ShunmeiCho/cc-clip) 的 Windows 扩展——自动将截图上传到远程服务器，让你在 Claude Code / Codex CLI 中直接粘贴图片。
 
 ## 功能
 
