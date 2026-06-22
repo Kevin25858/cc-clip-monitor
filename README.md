@@ -29,7 +29,7 @@
 2. 在任意应用中截图或复制图片到剪贴板
 3. 工具自动检测 → 上传到远程 `~/.cache/cc-clip/uploads` 目录
 4. 弹出 Toast 通知，远程路径已写入剪贴板
-5. 切换到 Claude Code / Codex CLI 窗口，路径自动粘贴
+5. 切换到 Claude Code / Codex CLI 窗口，路径自动粘贴并保存到剪贴板
 
 ## 致谢
 
