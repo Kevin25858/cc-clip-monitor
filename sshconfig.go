@@ -117,22 +117,35 @@ func (h SSHHost) sshArgs(extra ...string) []string {
 	return args
 }
 
-// TestSSHConnection tests if the host can be connected via SSH.
-// If key-based auth works, returns immediately.
-// Otherwise prompts for password and verifies it.
+// TestSSHConnection first tests if the host is reachable,
+// then checks authentication (key-based first, then password).
 func TestSSHConnection(host *SSHHost) error {
-	fmt.Printf("\033[36m正在连接 %s ...\033[0m\n", host.Address())
+	addr := host.Address()
+	fmt.Printf("\033[36m正在连接 %s ...\033[0m\n", addr)
 
-	// Try with default (key-based) first: run a harmless command
-	args := host.sshArgs("echo ok")
+	// Step 1: test basic connectivity (timeout = unreachable)
+	args := host.sshArgs("-o", "ConnectTimeout=5", "-o", "BatchMode=yes", "echo ok")
 	cmd := exec.Command("ssh", args...)
 	out, err := cmd.CombinedOutput()
+	if err != nil {
+		exitCode := -1
+		if cmd.ProcessState != nil {
+			exitCode = cmd.ProcessState.ExitCode()
+		}
+		// exit code 255 = connection failure (timeout, refused, unreachable)
+		if exitCode == 255 {
+			return fmt.Errorf("无法连接到 %s，连接超时或主机不可达", addr)
+		}
+		// other codes = connection ok but auth failed — fall through to password
+	}
+
+	// Step 2: if key-based auth worked, we're done
 	if err == nil && strings.TrimSpace(string(out)) == "ok" {
 		fmt.Printf("\033[32m✓ 密钥认证成功\033[0m\n")
 		return nil
 	}
 
-	// Key auth failed — prompt for password
+	// Step 3: connection works but auth failed — prompt for password
 	fmt.Printf("\033[33m需要输入密码\033[0m\n")
 	for attempt := 0; attempt < 3; attempt++ {
 		fmt.Print("密码: ")
@@ -145,8 +158,7 @@ func TestSSHConnection(host *SSHHost) error {
 			continue
 		}
 
-		// Verify password by running a test command
-		args = host.sshArgs("echo ok")
+		args = host.sshArgs("-o", "ConnectTimeout=5", "echo ok")
 		cmd = exec.Command("ssh", args...)
 		cmd.Stdin = strings.NewReader(pw + "\n")
 		out, err = cmd.CombinedOutput()
@@ -159,7 +171,7 @@ func TestSSHConnection(host *SSHHost) error {
 		fmt.Printf("\033[31m密码错误，还剩 %d 次机会\033[0m\n", 2-attempt)
 	}
 
-	return fmt.Errorf("无法连接到 %s，认证失败", host.Address())
+	return fmt.Errorf("无法连接到 %s，认证失败", addr)
 }
 
 // readPassword reads a line from stdin without echo (best-effort).
