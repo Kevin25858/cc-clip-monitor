@@ -1,5 +1,7 @@
 # cc-clip-monitor
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 [cc-clip](https://github.com/ShunmeiCho/cc-clip) 的 Windows 扩展——监听剪贴板截图，自动通过 SSH 上传到远程服务器，让你在终端里通过 SSH 运行的 Claude Code、Codex CLI、opencode 等工具中直接粘贴图片。
 
 ## 功能
