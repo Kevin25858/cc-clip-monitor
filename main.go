@@ -15,7 +15,7 @@ var (
 	setConsoleCP      = kernel32Mod.NewProc("SetConsoleCP")
 )
 
-var version = "1.0.0"
+var version = "1.1.0"
 
 func main() {
 	setConsoleOutputCP.Call(65001)
@@ -112,6 +112,7 @@ func main() {
 
 		if !*noCleanup {
 			go CleanupRemote(host, remoteDir)
+			go CleanupLocal(monitor.tempDir)
 		}
 
 		remotePath, err := uploader.Upload(imgPath)
