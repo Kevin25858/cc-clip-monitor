@@ -21,6 +21,12 @@ func NewUploader(host *SSHHost, remoteDir string, useCCClip bool) *Uploader {
 	}
 }
 
+// HasCCClip 检测 cc-clip 命令是否可用
+func HasCCClip() bool {
+	_, err := exec.LookPath("cc-clip")
+	return err == nil
+}
+
 func (u *Uploader) Upload(filePath string) (string, error) {
 	if u.useCCClip {
 		return u.uploadViaCCClip(filePath)

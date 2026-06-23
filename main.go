@@ -70,7 +70,7 @@ func main() {
 	}
 
 	remoteDir := "~/.cache/cc-clip/uploads"
-	useCCClip := !*useSCP
+	useCCClip := !*useSCP && HasCCClip()
 
 	clearScreen()
 	fmt.Println("\033[32mcc-clip-monitor 已启动\033[0m")
@@ -79,7 +79,11 @@ func main() {
 		fmt.Printf(" (%s)", host.Address())
 	}
 	fmt.Println()
-	fmt.Printf("模式: %s\n", map[bool]string{true: "cc-clip send", false: "SCP 直连"}[useCCClip])
+	mode := "SCP 直连"
+	if useCCClip {
+		mode = "cc-clip send"
+	}
+	fmt.Printf("模式: %s\n", mode)
 	fmt.Println("复制图片 → 上传 → 点击终端 → 自动粘贴")
 	fmt.Println("按 Ctrl+C 停止\n")
 
