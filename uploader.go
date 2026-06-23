@@ -53,8 +53,11 @@ func (u *Uploader) scpArgs(src, dst string) []string {
 }
 
 func (u *Uploader) uploadViaSCP(filePath string) (string, error) {
+	// 先解析远程 home 目录，把 ~ 替换成绝对路径
+	resolvedDir := u.resolveRemoteDir()
+
 	remoteName := fmt.Sprintf("clip-%d.png", time.Now().UnixMilli())
-	remotePath := u.remoteDir + "/" + remoteName
+	remotePath := resolvedDir + "/" + remoteName
 
 	// mkdir -p remoteDir first
 	mkdirTarget := u.host.sshTarget()
@@ -62,7 +65,7 @@ func (u *Uploader) uploadViaSCP(filePath string) (string, error) {
 	if u.host.Port != "" && u.host.Port != "22" {
 		mkdirArgs = append(mkdirArgs, "-p", u.host.Port)
 	}
-	mkdirArgs = append(mkdirArgs, mkdirTarget, "mkdir -p "+u.remoteDir)
+	mkdirArgs = append(mkdirArgs, mkdirTarget, "mkdir -p "+resolvedDir)
 	mkdirCmd := exec.Command("ssh", mkdirArgs...)
 	u.withPassword(mkdirCmd)
 	mkdirCmd.CombinedOutput()
@@ -76,6 +79,25 @@ func (u *Uploader) uploadViaSCP(filePath string) (string, error) {
 		return "", fmt.Errorf("scp failed: %s: %w", strings.TrimSpace(string(out)), err)
 	}
 	return remotePath, nil
+}
+
+// resolveRemoteDir 通过 SSH 执行 echo ~ 获取实际 home 目录，替换 remoteDir 中的 ~
+func (u *Uploader) resolveRemoteDir() string {
+	if !strings.Contains(u.remoteDir, "~") {
+		return u.remoteDir
+	}
+	args := u.host.sshArgs("echo ~")
+	cmd := exec.Command("ssh", args...)
+	u.withPassword(cmd)
+	out, err := cmd.Output()
+	if err != nil {
+		return u.remoteDir // 失败时返回原始路径
+	}
+	home := strings.TrimSpace(string(out))
+	if home == "" {
+		return u.remoteDir
+	}
+	return strings.Replace(u.remoteDir, "~", home, 1)
 }
 
 // withPassword wires stdin so ssh/scp can read a password prompt.
